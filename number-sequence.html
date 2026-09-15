@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Number Sequence | MindCare AI</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+            overflow-x: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #00c6ff,
+                    #0072ff,
+                    #7f00ff,
+                    #f857a6
+                );
+
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+        }
+
+
+        /* Animated Background */
+
+        @keyframes gradientMove {
+
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+
+        /* Floating Bubbles */
+
+        .bubble {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.15);
+            z-index: -1;
+            animation: floatBubble 8s infinite ease-in-out;
+        }
+
+        .bubble1 {
+            width: 260px;
+            height: 260px;
+            top: -100px;
+            left: -80px;
+        }
+
+        .bubble2 {
+            width: 200px;
+            height: 200px;
+            bottom: -60px;
+            right: -50px;
+            animation-delay: 2s;
+        }
+
+        .bubble3 {
+            width: 130px;
+            height: 130px;
+            top: 45%;
+            left: 8%;
+            animation-delay: 4s;
+        }
+
+        @keyframes floatBubble {
+
+            50% {
+                transform:
+                    translateY(-30px)
+                    translateX(25px);
+            }
+        }
+
+
+        /* Main Container */
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+
+            text-align: center;
+            padding: 35px;
+
+            border-radius: 30px;
+
+            background: rgba(255, 255, 255, 0.18);
+
+            backdrop-filter: blur(20px);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.3);
+
+            box-shadow:
+                0 25px 60px
+                rgba(0, 0, 0, 0.25);
+        }
+
+
+        /* Heading */
+
+        h1 {
+            font-size: 38px;
+            color: white;
+
+            margin-bottom: 10px;
+
+            text-shadow:
+                0 4px 15px
+                rgba(0, 0, 0, 0.2);
+        }
+
+        .description {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+
+
+        /* Stats */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: rgba(254, 255, 255, 0.2);
+
+            padding: 15px;
+            border-radius: 15px;
+
+            color: white;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.25);
+        }
+
+        .stat-box h3 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .stat-box span {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+
+
+        /* Question Card */
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.15);
+
+            padding: 35px;
+            border-radius: 25px;
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.25);
+
+            margin-bottom: 20px;
+        }
+
+        .question-card h2 {
+            color: white;
+            font-size: 21px;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* Number Sequence */
+
+        .sequence {
+            display: flex;
+
+            justify-content: center;
+            align-items: center;
+
+            flex-wrap: wrap;
+            gap: 15px;
+
+            margin-bottom: 30px;
+        }
+
+        .number-box {
+            width: 80px;
+            height: 80px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #d8e8ff
+                );
+
+            color: #3c238b;
+
+            border-radius: 18px;
+
+            font-size: 28px;
+            font-weight: bold;
+
+            box-shadow:
+                0 10px 20px
+                rgba(0, 0, 0, 0.18);
+
+            animation: numberFloat 3s infinite ease-in-out;
+        }
+
+        .number-box:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .number-box:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .number-box:nth-child(4) {
+            animation-delay: 0.6s;
+        }
+
+        .number-box:nth-child(5) {
+            animation-delay: 0.8s;
+        }
+
+        @keyframes numberFloat {
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+
+        /* Answer Options */
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+
+            gap: 15px;
+            max-width: 500px;
+
+            margin: auto;
+        }
+
+        .option {
+            padding: 16px;
+
+            border: none;
+            border-radius: 14px;
+
+            cursor: pointer;
+
+            font-size: 20px;
+            font-weight: bold;
+
+            color: white;
+
+            background:
+                rgba(255, 255, 255, 0.18);
+
+            border:
+                1px solid
+                rgba(255, 255, 255, 0.25);
+
+            transition: 0.3s;
+        }
+
+        .option:hover {
+            transform: translateY(-4px) scale(1.02);
+
+            background:
+                rgba(255, 255, 255, 0.3);
+        }
+
+        .option.correct {
+            background:
+                linear-gradient(
+                    135deg,
+                    #00b09b,
+                    #96c93d
+                );
+        }
+
+        .option.wrong {
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff416c,
+                    #ff4b2b
+                );
+        }
+
+
+        /* Message */
+
+        #message {
+            min-height: 35px;
+
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+
+            margin-top: 15px;
+        }
+
+
+        /* Next Button */
+
+        #nextBtn {
+            margin-top: 10px;
+
+            border: none;
+
+            padding: 14px 25px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+            font-weight: bold;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff512f,
+                    #dd2476
+                );
+
+            box-shadow:
+                0 8px 20px
+                rgba(221, 36, 118, 0.35);
+
+            display: none;
+
+            transition: 0.3s;
+        }
+
+        #nextBtn:hover {
+            transform: translateY(-3px);
+        }
+
+
+        /* Responsive */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .game-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .question-card {
+                padding: 20px 10px;
+            }
+
+            .stats {
+                gap: 8px;
+            }
+
+            .stat-box {
+                padding: 10px;
+            }
+
+            .number-box {
+                width: 55px;
+                height: 55px;
+
+                font-size: 20px;
+            }
+
+            .sequence {
+                gap: 8px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- Background -->
+
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+    <div class="bubble bubble3"></div>
+
+
+    <!-- Game -->
+
+    <div class="game-container">
+
+        <h1>🔢 Number Sequence</h1>
+
+        <p class="description">
+            Find the missing number in the sequence!
+        </p>
+
+
+        <!-- Statistics -->
+
+        <div class="stats">
+
+            <div class="stat-box">
+                <h3 id="questionNumber">1/5</h3>
+                <span>Question</span>
+            </div>
+
+            <div class="stat-box">
+                <h3 id="score">0</h3>
+                <span>Correct</span>
+            </div>
+
+            <div class="stat-box">
+                <h3 id="timer">00:00</h3>
+                <span>Time</span>
+            </div>
+
+        </div>
+
+
+        <!-- Question -->
+
+        <div class="question-card">
+
+            <h2>What number comes next?</h2>
+
+            <div
+                class="sequence"
+                id="sequence"
+            ></div>
+
+            <div
+                class="options"
+                id="options"
+            ></div>
+
+        </div>
+
+
+        <!-- Message -->
+
+        <div id="message"></div>
+
+
+        <button
+            id="nextBtn"
+            onclick="nextQuestion()"
+        >
+            Next Question →
+        </button>
+
+    </div>
+
+
+    <script>
+
+
+        /* ==========================
+           GAME QUESTIONS
+        ========================== */
+
+        const questions = [
+
+            {
+                sequence: [2, 4, 6, 8, "?"],
+                correct: 10,
+                options: [10, 9, 12, 14]
+            },
+
+            {
+                sequence: [5, 10, 15, 20, "?"],
+                correct: 25,
+                options: [25, 30, 22, 35]
+            },
+
+            {
+                sequence: [3, 6, 9, 12, "?"],
+                correct: 15,
+                options: [14, 15, 18, 20]
+            },
+
+            {
+                sequence: [10, 20, 30, 40, "?"],
+                correct: 50,
+                options: [50, 45, 60, 55]
+            },
+
+            {
+                sequence: [1, 4, 7, 10, "?"],
+                correct: 13,
+                options: [13, 14, 15, 16]
+            }
+
+        ];
+
+
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+
+        let seconds = 0;
+        let timerInterval;
+
+        let answered = false;
+
+
+        /* ==========================
+           ELEMENTS
+        ========================== */
+
+        const sequenceContainer =
+            document.getElementById("sequence");
+
+        const optionsContainer =
+            document.getElementById("options");
+
+        const questionNumber =
+            document.getElementById("questionNumber");
+
+        const scoreDisplay =
+            document.getElementById("score");
+
+        const message =
+            document.getElementById("message");
+
+        const nextBtn =
+            document.getElementById("nextBtn");
+
+        const timerDisplay =
+            document.getElementById("timer");
+
+
+        /* ==========================
+           LOAD QUESTION
+        ========================== */
+
+        function loadQuestion() {
+
+            answered = false;
+
+            message.innerText = "";
+
+            nextBtn.style.display = "none";
+
+
+            const question =
+                questions[currentQuestion];
+
+
+            questionNumber.innerText =
+                (currentQuestion + 1) +
+                "/" +
+                questions.length;
+
+
+            sequenceContainer.innerHTML = "";
+
+            optionsContainer.innerHTML = "";
+
+
+            /* Create Sequence */
+
+            question.sequence.forEach(
+                function(number) {
+
+                    const box =
+                        document.createElement("div");
+
+                    box.classList.add(
+                        "number-box"
+                    );
+
+                    box.innerText = number;
+
+                    sequenceContainer.appendChild(
+                        box
+                    );
+
+                }
+            );
+
+
+            /* Shuffle Options */
+
+            let shuffledOptions =
+                [...question.options]
+                .sort(
+                    () =>
+                    Math.random() - 0.5
+                );
+
+
+            /* Create Options */
+
+            shuffledOptions.forEach(
+                function(option) {
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
+
+                    button.classList.add(
+                        "option"
+                    );
+
+                    button.innerText =
+                        option;
+
+
+                    button.addEventListener(
+                        "click",
+                        function() {
+
+                            checkAnswer(
+                                Number(option),
+                                button
+                            );
+
+                        }
+                    );
+
+
+                    optionsContainer.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* ==========================
+           CHECK ANSWER
+        ========================== */
+
+        function checkAnswer(
+            selectedAnswer,
+            selectedButton
+        ) {
+
+            if (answered) {
+                return;
+            }
+
+
+            answered = true;
+
+
+            const correctAnswer =
+                questions[currentQuestion]
+                .correct;
+
+
+            const allButtons =
+                document.querySelectorAll(
+                    ".option"
+                );
+
+
+            allButtons.forEach(
+                function(button) {
+
+                    button.disabled = true;
+
+
+                    if (
+                        Number(button.innerText) ===
+                        correctAnswer
+                    ) {
+
+                        button.classList.add(
+                            "correct"
+                        );
+
+                    }
+
+                }
+            );
+
+
+            if (
+                selectedAnswer ===
+                correctAnswer
+            ) {
+
+                correctAnswers++;
+
+                scoreDisplay.innerText =
+                    correctAnswers;
+
+
+                message.innerText =
+                    "🎉 Correct! Excellent pattern recognition!";
+
+
+            } else {
+
+                selectedButton.classList.add(
+                    "wrong"
+                );
+
+
+                message.innerText =
+                    "❌ Try to understand the pattern carefully!";
+
+            }
+
+
+            nextBtn.style.display =
+                "inline-block";
+
+        }
+
+
+        /* ==========================
+           NEXT QUESTION
+        ========================== */
+
+        function nextQuestion() {
+
+            currentQuestion++;
+
+
+            if (
+                currentQuestion <
+                questions.length
+            ) {
+
+                loadQuestion();
+
+            } else {
+
+                endGame();
+
+            }
+
+        }
+
+
+        /* ==========================
+           TIMER
+        ========================== */
+
+        function startTimer() {
+
+            timerInterval =
+                setInterval(function() {
+
+                    seconds++;
+
+
+                    let minutes =
+                        Math.floor(seconds / 60);
+
+                    let remainingSeconds =
+                        seconds % 60;
+
+
+                    minutes =
+                        String(minutes)
+                        .padStart(2, "0");
+
+
+                    remainingSeconds =
+                        String(remainingSeconds)
+                        .padStart(2, "0");
+
+
+                    timerDisplay.innerText =
+                        minutes +
+                        ":" +
+                        remainingSeconds;
+
+                }, 1000);
+
+        }
+
+
+        /* ==========================
+           END GAME
+        ========================== */
+
+        function endGame() {
+
+            clearInterval(timerInterval);
+
+
+            const percentage =
+                Math.round(
+                    (correctAnswers /
+                    questions.length) * 100
+                );
+
+
+            sequenceContainer.innerHTML =
+                "<div class='number-box'>🏆</div>";
+
+
+            optionsContainer.innerHTML = "";
+
+
+            document
+                .querySelector(
+                    ".question-card h2"
+                )
+                .innerText =
+                "Game Completed!";
+
+
+            message.innerText =
+                "🎉 Final Score: " +
+                percentage +
+                "%";
+
+
+            nextBtn.style.display = "none";
+
+
+            let analysis = "";
+
+
+            if (percentage >= 80) {
+
+                analysis =
+                    "Excellent logical thinking and pattern recognition!";
+
+            } else if (percentage >= 60) {
+
+                analysis =
+                    "Good performance! Continue practicing number patterns.";
+
+            } else {
+
+                analysis =
+                    "AI recommends more number sequence exercises.";
+            }
+
+
+            setTimeout(function() {
+
+                alert(
+                    "🏆 Game Completed!\n\n" +
+
+                    "🎯 Correct Answers: " +
+                    correctAnswers +
+                    "/" +
+                    questions.length +
+
+                    "\n📊 Score: " +
+                    percentage +
+                    "%" +
+
+                    "\n⏱️ Time: " +
+                    timerDisplay.innerText +
+
+                    "\n\n🤖 AI Analysis:\n" +
+                    analysis
+                );
+
+            }, 500);
+
+        }
+
+
+        /* ==========================
+           START GAME
+        ========================== */
+
+        loadQuestion();
+        startTimer();
+
+    </script>
+
+</body>
+
+</html>

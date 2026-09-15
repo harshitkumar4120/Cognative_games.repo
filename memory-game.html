@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Memory Match | MindCare AI</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+
+            overflow-x: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #6a11cb,
+                    #2575fc,
+                    #00c6ff,
+                    #f857a6
+                );
+
+            background-size: 400% 400%;
+
+            animation: gradientMove 12s ease infinite;
+        }
+
+
+        /* Animated Background */
+
+        @keyframes gradientMove {
+
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+
+        }
+
+
+        /* Background Circles */
+
+        .bubble {
+            position: fixed;
+
+            border-radius: 50%;
+
+            background: rgba(255, 255, 255, 0.15);
+
+            filter: blur(2px);
+
+            z-index: -1;
+
+            animation: floatBubble 8s infinite ease-in-out;
+        }
+
+
+        .bubble1 {
+            width: 250px;
+            height: 250px;
+
+            top: -80px;
+            left: -80px;
+        }
+
+
+        .bubble2 {
+            width: 180px;
+            height: 180px;
+
+            bottom: 30px;
+            right: -50px;
+
+            animation-delay: 2s;
+        }
+
+
+        .bubble3 {
+            width: 120px;
+            height: 120px;
+
+            top: 40%;
+            left: 5%;
+
+            animation-delay: 4s;
+        }
+
+
+        @keyframes floatBubble {
+
+            50% {
+                transform: translateY(-30px) translateX(20px);
+            }
+
+        }
+
+
+        /* Main Container */
+
+        .game-container {
+
+            width: 100%;
+            max-width: 750px;
+
+            text-align: center;
+
+            padding: 35px;
+
+            border-radius: 30px;
+
+            background: rgba(255, 255, 255, 0.18);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.3);
+
+            box-shadow:
+                0 25px 60px rgba(0, 0, 0, 0.25);
+        }
+
+
+        /* Header */
+
+        .game-container h1 {
+
+            font-size: 38px;
+
+            margin-bottom: 10px;
+
+            color: white;
+
+            text-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+
+        .game-container p {
+
+            color: rgba(255, 255, 255, 0.9);
+
+            margin-bottom: 25px;
+
+            font-size: 16px;
+        }
+
+
+        /* Stats */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .stat-box {
+
+            background: rgba(255, 255, 255, 0.2);
+
+            padding: 15px;
+
+            border-radius: 15px;
+
+            color: white;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.25);
+        }
+
+
+        .stat-box h3 {
+
+            font-size: 22px;
+
+            margin-bottom: 5px;
+        }
+
+
+        .stat-box span {
+
+            font-size: 12px;
+
+            opacity: 0.85;
+        }
+
+
+        /* Game Board */
+
+        .game-board {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 15px;
+
+            justify-content: center;
+
+            max-width: 520px;
+
+            margin: auto;
+        }
+
+
+        /* Card */
+
+        .card {
+
+            aspect-ratio: 1;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #d7e8ff
+                );
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 42px;
+
+            cursor: pointer;
+
+            position: relative;
+
+            transition: 0.3s;
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.2);
+
+            user-select: none;
+        }
+
+
+        /* Hidden Card */
+
+        .card.hidden {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #7b2ff7,
+                    #f107a3
+                );
+
+            color: transparent;
+        }
+
+
+        .card.hidden::after {
+
+            content: "🧠";
+
+            color: white;
+
+            font-size: 35px;
+        }
+
+
+        .card:hover {
+
+            transform:
+                translateY(-5px)
+                scale(1.03);
+
+            box-shadow:
+                0 15px 25px rgba(0, 0, 0, 0.25);
+        }
+
+
+        .card.matched {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #43e97b,
+                    #38f9d7
+                );
+
+            animation: matchPop 0.5s ease;
+        }
+
+
+        @keyframes matchPop {
+
+            50% {
+                transform: scale(1.1);
+            }
+
+        }
+
+
+        /* Buttons */
+
+        .buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            margin-top: 30px;
+        }
+
+
+        button {
+
+            border: none;
+
+            padding: 14px 22px;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff512f,
+                    #dd2476
+                );
+
+            box-shadow:
+                0 8px 20px rgba(221, 36, 118, 0.35);
+
+            transition: 0.3s;
+        }
+
+
+        button:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 12px 25px rgba(221, 36, 118, 0.45);
+        }
+
+
+        /* Message */
+
+        #message {
+
+            margin-top: 20px;
+
+            min-height: 30px;
+
+            color: white;
+
+            font-weight: bold;
+
+            font-size: 18px;
+        }
+
+
+        /* Responsive */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .game-container {
+                padding: 20px;
+            }
+
+            .game-container h1 {
+                font-size: 28px;
+            }
+
+            .game-board {
+                gap: 10px;
+            }
+
+            .stats {
+                gap: 8px;
+            }
+
+            .stat-box {
+                padding: 10px;
+            }
+
+            .stat-box h3 {
+                font-size: 18px;
+            }
+
+            .card {
+                font-size: 32px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- Animated Background Bubbles -->
+
+    <div class="bubble bubble1"></div>
+    <div class="bubble bubble2"></div>
+    <div class="bubble bubble3"></div>
+
+
+    <!-- Main Game -->
+
+    <div class="game-container">
+
+        <h1>🧠 Memory Match Game</h1>
+
+        <p>
+            Find the matching pairs and train your memory!
+        </p>
+
+
+        <!-- Stats -->
+
+        <div class="stats">
+
+            <div class="stat-box">
+
+                <h3 id="moves">0</h3>
+
+                <span>Moves</span>
+
+            </div>
+
+
+            <div class="stat-box">
+
+                <h3 id="matches">0</h3>
+
+                <span>Matches</span>
+
+            </div>
+
+
+            <div class="stat-box">
+
+                <h3 id="timer">00:00</h3>
+
+                <span>Time</span>
+
+            </div>
+
+        </div>
+
+
+        <!-- Game Board -->
+
+        <div
+            class="game-board"
+            id="gameBoard"
+        ></div>
+
+
+        <!-- Buttons -->
+
+        <div class="buttons">
+
+            <button onclick="restartGame()">
+                🔄 Restart Game
+            </button>
+
+        </div>
+
+
+        <!-- Message -->
+
+        <div id="message"></div>
+
+    </div>
+
+
+    <script>
+
+        // =================================
+        // GAME DATA
+        // =================================
+
+        const emojis = [
+            "🍎",
+            "🐶",
+            "🚗",
+            "⭐",
+            "🍎",
+            "🐶",
+            "🚗",
+            "⭐"
+        ];
+
+
+        let firstCard = null;
+        let secondCard = null;
+
+        let lockBoard = false;
+
+        let moves = 0;
+        let matchedPairs = 0;
+
+        let seconds = 0;
+
+        let timerInterval = null;
+
+        let gameStarted = false;
+
+
+        const gameBoard =
+            document.getElementById("gameBoard");
+
+        const movesDisplay =
+            document.getElementById("moves");
+
+        const matchesDisplay =
+            document.getElementById("matches");
+
+        const timerDisplay =
+            document.getElementById("timer");
+
+        const messageDisplay =
+            document.getElementById("message");
+
+
+        // =================================
+        // SHUFFLE CARDS
+        // =================================
+
+        function shuffle(array) {
+
+            return array.sort(
+                () => Math.random() - 0.5
+            );
+
+        }
+
+
+        // =================================
+        // CREATE GAME BOARD
+        // =================================
+
+        function createBoard() {
+
+            gameBoard.innerHTML = "";
+
+            shuffle(emojis);
+
+
+            emojis.forEach(function (emoji) {
+
+                const card =
+                    document.createElement("div");
+
+
+                card.classList.add(
+                    "card",
+                    "hidden"
+                );
+
+
+                card.dataset.emoji = emoji;
+
+                card.innerText = emoji;
+
+
+                card.addEventListener(
+                    "click",
+                    flipCard
+                );
+
+
+                gameBoard.appendChild(card);
+
+            });
+
+        }
+
+
+        // =================================
+        // FLIP CARD
+        // =================================
+
+        function flipCard() {
+
+            if (
+
+                lockBoard ||
+
+                this === firstCard ||
+
+                this.classList.contains("matched")
+
+            ) {
+
+                return;
+
+            }
+
+
+            // Start timer on first click
+
+            if (!gameStarted) {
+
+                startTimer();
+
+                gameStarted = true;
+
+            }
+
+
+            // Show card
+
+            this.classList.remove("hidden");
+
+
+            if (firstCard === null) {
+
+                firstCard = this;
+
+            } else {
+
+                secondCard = this;
+
+                moves++;
+
+                movesDisplay.innerText = moves;
+
+
+                checkMatch();
+
+            }
+
+        }
+
+
+        // =================================
+        // CHECK MATCH
+        // =================================
+
+        function checkMatch() {
+
+            if (
+
+                firstCard.dataset.emoji ===
+                secondCard.dataset.emoji
+
+            ) {
+
+                firstCard.classList.add(
+                    "matched"
+                );
+
+                secondCard.classList.add(
+                    "matched"
+                );
+
+
+                matchedPairs++;
+
+                matchesDisplay.innerText =
+                    matchedPairs;
+
+
+                messageDisplay.innerText =
+                    "🎉 Great! You found a match!";
+
+
+                resetCards();
+
+
+                if (matchedPairs === 4) {
+
+                    gameComplete();
+
+                }
+
+            } else {
+
+                lockBoard = true;
+
+
+                messageDisplay.innerText =
+                    "Try again! 💪";
+
+
+                setTimeout(function () {
+
+                    firstCard.classList.add(
+                        "hidden"
+                    );
+
+                    secondCard.classList.add(
+                        "hidden"
+                    );
+
+
+                    resetCards();
+
+                    messageDisplay.innerText = "";
+
+                }, 900);
+
+            }
+
+        }
+
+
+        // =================================
+        // RESET SELECTED CARDS
+        // =================================
+
+        function resetCards() {
+
+            firstCard = null;
+
+            secondCard = null;
+
+            lockBoard = false;
+
+        }
+
+
+        // =================================
+        // TIMER
+        // =================================
+
+        function startTimer() {
+
+            timerInterval =
+                setInterval(function () {
+
+                    seconds++;
+
+
+                    let minutes =
+                        Math.floor(seconds / 60);
+
+                    let remainingSeconds =
+                        seconds % 60;
+
+
+                    minutes =
+                        String(minutes).padStart(
+                            2,
+                            "0"
+                        );
+
+
+                    remainingSeconds =
+                        String(
+                            remainingSeconds
+                        ).padStart(
+                            2,
+                            "0"
+                        );
+
+
+                    timerDisplay.innerText =
+                        minutes +
+                        ":" +
+                        remainingSeconds;
+
+                }, 1000);
+
+        }
+
+
+        // =================================
+        // GAME COMPLETE
+        // =================================
+
+        function gameComplete() {
+
+            clearInterval(timerInterval);
+
+
+            messageDisplay.innerText =
+                "🏆 Congratulations! You completed the game!";
+
+
+            // Performance Score
+
+            let score =
+                Math.max(
+                    40,
+                    100 -
+                    (moves - 4) * 8 -
+                    seconds
+                );
+
+
+            score =
+                Math.round(score);
+
+
+            setTimeout(function () {
+
+                alert(
+                    "🎉 Game Completed!\n\n" +
+
+                    "⭐ Score: " + score + "%\n" +
+
+                    "🎯 Moves: " + moves + "\n" +
+
+                    "⏱️ Time: " +
+                    timerDisplay.innerText +
+
+                    "\n\n🤖 AI Performance Analysis:\n" +
+
+                    score >= 80
+                        ? "Excellent memory performance!"
+                        : score >= 60
+                        ? "Good! Regular practice can help improve performance."
+                        : "AI recommends more memory practice."
+                );
+
+            }, 500);
+
+        }
+
+
+        // =================================
+        // RESTART GAME
+        // =================================
+
+        function restartGame() {
+
+            clearInterval(timerInterval);
+
+
+            firstCard = null;
+            secondCard = null;
+
+            lockBoard = false;
+
+            moves = 0;
+            matchedPairs = 0;
+
+            seconds = 0;
+
+            gameStarted = false;
+
+
+            movesDisplay.innerText = "0";
+
+            matchesDisplay.innerText = "0";
+
+            timerDisplay.innerText = "00:00";
+
+            messageDisplay.innerText = "";
+
+
+            createBoard();
+
+        }
+
+
+        // =================================
+        // START GAME
+        // =================================
+
+        createBoard();
+
+    </script>
+
+</body>
+
+</html>
